@@ -37,6 +37,7 @@ proguard/
 captures/
 
 # IntelliJ
+.idea/
 *.iml
 .idea/workspace.xml
 .idea/tasks.xml
@@ -83,3 +84,5 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+release/
