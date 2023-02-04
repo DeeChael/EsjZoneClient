@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.deechael.esjzone.MainActivity
@@ -52,16 +51,18 @@ fun MainPagePreview() {
         },
         bottomBar = true
     ) {
-        Categories(null, listOf(
-            Category("Test1", ""),
-            Category("Test2", ""),
-            Category("Test3", ""),
-            Category("Test4", ""),
-            Category("Test5", ""),
-            Category("Test6", ""),
-            Category("Test7", ""),
-            Category("Test8", "")
-        ))
+        Categories(
+            null, listOf(
+                Category("Test1", ""),
+                Category("Test2", ""),
+                Category("Test3", ""),
+                Category("Test4", ""),
+                Category("Test5", ""),
+                Category("Test6", ""),
+                Category("Test7", ""),
+                Category("Test8", "")
+            )
+        )
     }
 }
 
@@ -201,12 +202,12 @@ fun NavBar(
 ) {
     NavigationBar {
         NavigationBarItem(selected = selectedIndex == 0, onClick = {
-                                                                   GlobalScope.launch {
-                                                                       thread {
-                                                                           mainPageTrigger()
-                                                                       }
-                                                                   }
-                                                                   }, label = {
+            GlobalScope.launch {
+                thread {
+                    mainPageTrigger()
+                }
+            }
+        }, label = {
             Text(
                 text = "主页",
                 modifier = Modifier.padding(18.dp)
