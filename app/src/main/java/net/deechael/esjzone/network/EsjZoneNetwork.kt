@@ -8,10 +8,10 @@ import net.deechael.esjzone.item.Chapter
 import net.deechael.esjzone.item.DetailedChapter
 import net.deechael.esjzone.item.DetailedNovel
 import net.deechael.esjzone.item.Novel
-import net.deechael.esjzone.item.content.BreakLine
-import net.deechael.esjzone.item.content.Content
-import net.deechael.esjzone.item.content.Image
-import net.deechael.esjzone.item.content.Text
+import net.deechael.esjzone.item.content.ChatperBreakLine
+import net.deechael.esjzone.item.content.ChapterContent
+import net.deechael.esjzone.item.content.ChatperImage
+import net.deechael.esjzone.item.content.ChapterText
 import okhttp3.Callback
 import okhttp3.Cookie
 import okhttp3.CookieJar
@@ -275,18 +275,18 @@ class EsjZoneNetwork(context: Context?, proxy: Proxy? = null) {
             .get()
         val document = Jsoup.parse(body(request.build()).string())
         val title = Xsoup.compile(CHAPTER_TITLE).evaluate(document).list()[0]
-        val contents = mutableListOf<Content>()
+        val chapterContents = mutableListOf<ChapterContent>()
         for (rawContent in Xsoup.compile(CHAPTER_CONTENT)
             .evaluate(document).elements[0].allElements) {
             if (rawContent.getElementsByTag("br").size > 0) {
-                contents.add(BreakLine())
+                chapterContents.add(ChatperBreakLine())
             } else if (rawContent.getElementsByTag("img").size > 0) {
-                contents.add(Image(rawContent.getElementsByTag("img")[0].attr("src")))
+                chapterContents.add(ChatperImage(rawContent.getElementsByTag("img")[0].attr("src")))
             } else {
-                contents.add(Text(rawContent.text()))
+                chapterContents.add(ChapterText(rawContent.text()))
             }
         }
-        return DetailedChapter(title, contents)
+        return DetailedChapter(title, chapterContents)
     }
 
     private fun response(request: Request): Response {

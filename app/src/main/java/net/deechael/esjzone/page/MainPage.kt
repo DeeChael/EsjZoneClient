@@ -1,22 +1,17 @@
 package net.deechael.esjzone.page
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +26,7 @@ import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.deechael.esjzone.MainActivity
@@ -46,8 +42,31 @@ fun ContainerPreview() {
     }
 }
 
+@Preview
 @Composable
-fun MainPage(context: Context, categories: List<Category>) {
+fun MainPagePreview() {
+    Container(
+        userTrigger = {
+        },
+        settingsTrigger = {
+        },
+        bottomBar = true
+    ) {
+        Categories(null, listOf(
+            Category("Test1", ""),
+            Category("Test2", ""),
+            Category("Test3", ""),
+            Category("Test4", ""),
+            Category("Test5", ""),
+            Category("Test6", ""),
+            Category("Test7", ""),
+            Category("Test8", "")
+        ))
+    }
+}
+
+@Composable
+fun MainPage(context: Context?, categories: List<Category>) {
     Container(
         userTrigger = {
             (context as MainActivity).setContent {
@@ -80,7 +99,8 @@ fun MainPage(context: Context, categories: List<Category>) {
                     }
                 }
             }
-        }
+        },
+        bottomBar = true
     ) {
         Categories(context, categories)
     }
@@ -121,7 +141,8 @@ fun UserPage(context: Context) {
                     }
                 }
             }
-        }
+        },
+        bottomBar = true
     ) {
         val network = (context as MainActivity).esjzone
         User(context = context, username = context.username)
@@ -163,96 +184,104 @@ fun SettingsPage(context: Context) {
                     }
                 }
             }
-        }
+        },
+        bottomBar = true
     ) {
         val network = (context as MainActivity).esjzone
         Settings(context = context)
     }
 }
 
+@Composable
+fun NavBar(
+    mainPageTrigger: () -> Unit = {},
+    userTrigger: () -> Unit = {},
+    settingsTrigger: () -> Unit = {},
+    selectedIndex: Int = 0
+) {
+    NavigationBar {
+        NavigationBarItem(selected = selectedIndex == 0, onClick = {
+                                                                   GlobalScope.launch {
+                                                                       thread {
+                                                                           mainPageTrigger()
+                                                                       }
+                                                                   }
+                                                                   }, label = {
+            Text(
+                text = "主页",
+                modifier = Modifier.padding(18.dp)
+            )
+        }, icon = {})
+        NavigationBarItem(selected = selectedIndex == 1, onClick = {
+            GlobalScope.launch {
+                thread {
+                    userTrigger()
+                }
+            }
+        }, label = {
+            Text(
+                text = "个人",
+                modifier = Modifier.padding(18.dp)
+            )
+        }, icon = {})
+        NavigationBarItem(selected = selectedIndex == 2, onClick = {
+            GlobalScope.launch {
+                thread {
+                    settingsTrigger()
+                }
+            }
+        }, label = {
+            Text(
+                text = "设置",
+                modifier = Modifier.padding(18.dp)
+            )
+        }, icon = {})
+    }
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Container(
+fun NewContainer(
     mainPageTrigger: () -> Unit = {},
     userTrigger: () -> Unit = {},
     settingsTrigger: () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize()
+    Scaffold(
+        bottomBar = {
+            NavBar(mainPageTrigger, userTrigger, settingsTrigger)
+        }
     ) {
-        Column {
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
             BoxScopeInstance.content()
         }
-        Divider(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-        )
-        Column(
-            modifier = Modifier
-                .height(70.dp)
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-            horizontalAlignment = Alignment.CenterHorizontally
+    }
+}
+
+@Composable
+fun Container(
+    mainPageTrigger: () -> Unit = {},
+    userTrigger: () -> Unit = {},
+    settingsTrigger: () -> Unit = {},
+    bottomBar: Boolean = false,
+    content: @Composable BoxScope.() -> Unit
+) {
+    if (bottomBar) {
+        NewContainer(mainPageTrigger, userTrigger, settingsTrigger) {
+            BoxScopeInstance.content()
+        }
+    } else {
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Row(
-                modifier = Modifier.padding(5.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Card(
-                    onClick = {
-                        GlobalScope.launch {
-                            thread {
-                                mainPageTrigger()
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxHeight(),
-                    shape = RoundedCornerShape(5.dp)
-                ) {
-                    Text(
-                        text = "主页",
-                        modifier = Modifier.padding(18.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(5.dp))
-                Card(
-                    onClick = {
-                        GlobalScope.launch {
-                            thread {
-                                userTrigger()
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxHeight(),
-                    shape = RoundedCornerShape(5.dp)
-                ) {
-                    Text(
-                        text = "个人",
-                        modifier = Modifier.padding(18.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(5.dp))
-                Card(
-                    onClick = {
-                        GlobalScope.launch {
-                            thread {
-                                settingsTrigger()
-                            }
-                        }
-                    },
-                    modifier = Modifier.fillMaxHeight(),
-                    shape = RoundedCornerShape(5.dp)
-                ) {
-                    Text(
-                        text = "设置",
-                        modifier = Modifier.padding(18.dp)
-                    )
-                }
+            Column {
+                BoxScopeInstance.content()
             }
         }
     }
-
 }
 
 internal object BoxScopeInstance : BoxScope {

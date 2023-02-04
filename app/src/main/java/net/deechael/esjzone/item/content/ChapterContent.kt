@@ -1,8 +1,8 @@
 package net.deechael.esjzone.item.content
 
-interface Content
+interface ChapterContent
 
-class Text(content: String) : Content {
+class ChapterText(content: String) : ChapterContent {
 
     val content: String
 
@@ -16,7 +16,7 @@ class Text(content: String) : Content {
 
 }
 
-class BreakLine : Content {
+class ChatperBreakLine : ChapterContent {
 
     override fun toString(): String {
         return "\n"
@@ -24,7 +24,7 @@ class BreakLine : Content {
 
 }
 
-class Image(url: String) : Content {
+class ChatperImage(url: String) : ChapterContent {
 
     val url: String
 

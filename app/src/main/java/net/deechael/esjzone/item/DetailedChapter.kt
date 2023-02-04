@@ -1,15 +1,15 @@
 package net.deechael.esjzone.item
 
-import net.deechael.esjzone.item.content.Content
+import net.deechael.esjzone.item.content.ChapterContent
 
-class DetailedChapter(title: String, contents: List<Content>) {
+class DetailedChapter(title: String, chapterContents: List<ChapterContent>) {
 
     val title: String
-    val contents: List<Content>
+    val chapterContents: List<ChapterContent>
 
     init {
         this.title = title
-        this.contents = contents
+        this.chapterContents = chapterContents
     }
 
 }
