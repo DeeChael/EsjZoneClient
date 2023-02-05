@@ -1,11 +1,10 @@
 package net.deechael.esjzone.page
 
 import android.content.Context
-import androidx.activity.compose.setContent
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -15,7 +14,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,15 +25,14 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import net.deechael.esjzone.MainActivity
+import net.deechael.esjzone.EsjZoneActivity
 import net.deechael.esjzone.item.DetailedNovel
 import net.deechael.esjzone.item.Novel
 import net.deechael.esjzone.thread
-import net.deechael.esjzone.ui.theme.ESJZoneTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Novels(context: Context?, categoryName: String, novels: List<Novel>) {
+fun Novels(context: Context?, categoryName: String, novels: List<Novel>, back: () -> Unit = {}) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -53,23 +50,25 @@ fun Novels(context: Context?, categoryName: String, novels: List<Novel>) {
             for (novel in novels) {
                 Card(
                     onClick = {
-                        (context as MainActivity).setContent {
-                            ESJZoneTheme {
-                                Surface(modifier = Modifier.fillMaxSize()) {
-                                    Loading()
-                                }
-                            }
-                        }
+                        (context as EsjZoneActivity).updateContent({
+                            Loading()
+                        })
                         GlobalScope.launch {
                             thread {
                                 val detailedNovel = context.esjzone.getNovelDetail(novel)
-                                context.setContent {
-                                    ESJZoneTheme {
-                                        Surface(modifier = Modifier.fillMaxSize()) {
-                                            NovelDetail(context, detailedNovel)
-                                        }
+                                context.updateContent({
+                                    NovelDetail(context, detailedNovel) {
+                                        context.updateContent(
+                                            {
+                                                Novels(
+                                                    context = context,
+                                                    categoryName = categoryName,
+                                                    novels = novels
+                                                )
+                                            }
+                                        )
                                     }
-                                }
+                                })
                             }
                         }
                     },
@@ -86,11 +85,12 @@ fun Novels(context: Context?, categoryName: String, novels: List<Novel>) {
             }
         }
     }
+    BackHandler(enabled = true, back)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NovelDetail(context: Context, novel: DetailedNovel) {
+fun NovelDetail(context: Context, novel: DetailedNovel, back: () -> Unit = {}) {
     Box {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -117,24 +117,16 @@ fun NovelDetail(context: Context, novel: DetailedNovel) {
             for (chapter in novel.chapters) {
                 Card(
                     onClick = {
-                        (context as MainActivity).setContent {
-                            ESJZoneTheme {
-                                Surface(modifier = Modifier.fillMaxSize()) {
-                                    Loading()
-                                }
-                            }
-                        }
+                        (context as EsjZoneActivity).updateContent({
+                            Loading()
+                        })
                         GlobalScope.launch {
                             thread {
                                 val detailedChapter =
                                     context.esjzone.getChapterDetail(chapter)
-                                context.setContent {
-                                    ESJZoneTheme {
-                                        Surface(modifier = Modifier.fillMaxSize()) {
-                                            Chapter(detailedChapter = detailedChapter)
-                                        }
-                                    }
-                                }
+                                context.updateContent({
+                                    Chapter(detailedChapter = detailedChapter)
+                                })
                             }
                         }
                     },
@@ -151,4 +143,5 @@ fun NovelDetail(context: Context, novel: DetailedNovel) {
             }
         }
     }
+    BackHandler(enabled = true, back)
 }

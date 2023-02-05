@@ -1,7 +1,6 @@
 package net.deechael.esjzone.page
 
 import android.content.Context
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,9 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import net.deechael.esjzone.MainActivity
+import net.deechael.esjzone.EsjZoneActivity
 import net.deechael.esjzone.thread
-import net.deechael.esjzone.ui.theme.ESJZoneTheme
 
 @Preview
 @Composable
@@ -59,22 +56,21 @@ fun User(context: Context?, username: String) {
         ) {
             Card(
                 onClick = {
+                    (context as EsjZoneActivity).updateContent({
+                        Loading()
+                    })
                     GlobalScope.launch {
                         thread {
-                            val pages = (context as MainActivity).esjzone.getFavoritePages()
+                            val pages = context.esjzone.getFavoritePages()
                             val novels = context.esjzone.getFavorite(1)
-                            context.setContent {
-                                ESJZoneTheme {
-                                    Surface(modifier = Modifier.fillMaxSize()) {
-                                        Favorites(
-                                            context,
-                                            pages = pages,
-                                            currentPage = 1,
-                                            novels = novels
-                                        )
-                                    }
-                                }
-                            }
+                            context.updateContent({
+                                Favorites(
+                                    context,
+                                    pages = pages,
+                                    currentPage = 1,
+                                    novels = novels
+                                )
+                            })
                         }
                     }
                 },

@@ -2,7 +2,6 @@ package net.deechael.esjzone.page
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -28,15 +26,14 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import net.deechael.esjzone.MainActivity
+import net.deechael.esjzone.EsjZoneActivity
 import net.deechael.esjzone.item.Category
 import net.deechael.esjzone.thread
-import net.deechael.esjzone.ui.theme.ESJZoneTheme
 
 @Preview
 @Composable
 fun ContainerPreview() {
-    Container {
+    Container(index = -1) {
         Login(context = null)
     }
 }
@@ -49,7 +46,8 @@ fun MainPagePreview() {
         },
         settingsTrigger = {
         },
-        bottomBar = true
+        bottomBar = true,
+        index = 0
     ) {
         Categories(
             null, listOf(
@@ -70,38 +68,23 @@ fun MainPagePreview() {
 fun MainPage(context: Context?, categories: List<Category>) {
     Container(
         userTrigger = {
-            (context as MainActivity).setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        Loading()
-                    }
-                }
-            }
-            context.setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        UserPage(context = context)
-                    }
-                }
-            }
+            (context as EsjZoneActivity).updateContent({
+                Loading()
+            })
+            context.updateContent({
+                UserPage(context = context)
+            })
         },
         settingsTrigger = {
-            (context as MainActivity).setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        Loading()
-                    }
-                }
-            }
-            context.setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        SettingsPage(context = context)
-                    }
-                }
-            }
+            (context as EsjZoneActivity).updateContent({
+                Loading()
+            })
+            context.updateContent({
+                SettingsPage(context = context)
+            })
         },
-        bottomBar = true
+        bottomBar = true,
+        index = 0
     ) {
         Categories(context, categories)
     }
@@ -111,41 +94,26 @@ fun MainPage(context: Context?, categories: List<Category>) {
 fun UserPage(context: Context) {
     Container(
         mainPageTrigger = {
-            (context as MainActivity).setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        Loading()
-                    }
-                }
-            }
+            (context as EsjZoneActivity).updateContent({
+                Loading()
+            })
             val categories = context.esjzone.getCategories()
-            context.setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        MainPage(context = context, categories)
-                    }
-                }
-            }
+            context.updateContent({
+                MainPage(context = context, categories)
+            })
         },
         settingsTrigger = {
-            (context as MainActivity).setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        Loading()
-                    }
-                }
-            }
-            context.setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        SettingsPage(context = context)
-                    }
-                }
-            }
+            (context as EsjZoneActivity).updateContent({
+                Loading()
+            })
+            context.updateContent({
+                SettingsPage(context = context)
+            })
         },
-        bottomBar = true
+        bottomBar = true,
+        index = 1
     ) {
-        val network = (context as MainActivity).esjzone
+        val network = (context as EsjZoneActivity).esjzone
         User(context = context, username = context.username)
     }
 }
@@ -154,41 +122,26 @@ fun UserPage(context: Context) {
 fun SettingsPage(context: Context) {
     Container(
         mainPageTrigger = {
-            (context as MainActivity).setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        Loading()
-                    }
-                }
-            }
+            (context as EsjZoneActivity).updateContent({
+                Loading()
+            })
             val categories = context.esjzone.getCategories()
-            context.setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        MainPage(context = context, categories)
-                    }
-                }
-            }
+            context.updateContent({
+                MainPage(context = context, categories)
+            })
         },
         userTrigger = {
-            (context as MainActivity).setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        Loading()
-                    }
-                }
-            }
-            context.setContent {
-                ESJZoneTheme {
-                    Surface(modifier = Modifier.fillMaxSize()) {
-                        UserPage(context = context)
-                    }
-                }
-            }
+            (context as EsjZoneActivity).updateContent({
+                Loading()
+            })
+            context.updateContent({
+                UserPage(context = context)
+            })
         },
-        bottomBar = true
+        bottomBar = true,
+        index = 2
     ) {
-        val network = (context as MainActivity).esjzone
+        val network = (context as EsjZoneActivity).esjzone
         Settings(context = context)
     }
 }
@@ -201,7 +154,7 @@ fun NavBar(
     selectedIndex: Int = 0
 ) {
     NavigationBar {
-        NavigationBarItem(selected = selectedIndex == 0, onClick = {
+        NavigationBarItem(selected = (selectedIndex == 0), onClick = {
             GlobalScope.launch {
                 thread {
                     mainPageTrigger()
@@ -213,7 +166,7 @@ fun NavBar(
                 modifier = Modifier.padding(18.dp)
             )
         }, icon = {})
-        NavigationBarItem(selected = selectedIndex == 1, onClick = {
+        NavigationBarItem(selected = (selectedIndex == 1), onClick = {
             GlobalScope.launch {
                 thread {
                     userTrigger()
@@ -225,7 +178,7 @@ fun NavBar(
                 modifier = Modifier.padding(18.dp)
             )
         }, icon = {})
-        NavigationBarItem(selected = selectedIndex == 2, onClick = {
+        NavigationBarItem(selected = (selectedIndex == 2), onClick = {
             GlobalScope.launch {
                 thread {
                     settingsTrigger()
@@ -247,11 +200,12 @@ fun NewContainer(
     mainPageTrigger: () -> Unit = {},
     userTrigger: () -> Unit = {},
     settingsTrigger: () -> Unit = {},
+    index: Int,
     content: @Composable BoxScope.() -> Unit
 ) {
     Scaffold(
         bottomBar = {
-            NavBar(mainPageTrigger, userTrigger, settingsTrigger)
+            NavBar(mainPageTrigger, userTrigger, settingsTrigger, index)
         }
     ) {
         Box(
@@ -268,10 +222,11 @@ fun Container(
     userTrigger: () -> Unit = {},
     settingsTrigger: () -> Unit = {},
     bottomBar: Boolean = false,
+    index: Int = -1,
     content: @Composable BoxScope.() -> Unit
 ) {
     if (bottomBar) {
-        NewContainer(mainPageTrigger, userTrigger, settingsTrigger) {
+        NewContainer(mainPageTrigger, userTrigger, settingsTrigger, index) {
             BoxScopeInstance.content()
         }
     } else {

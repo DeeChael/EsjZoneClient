@@ -72,7 +72,7 @@ fun Chapter(detailedChapter: DetailedChapter) {
                 if (content is ChapterText) {
                     Text(
                         text = content.content,
-                        modifier = Modifier.padding(2.dp)
+                        modifier = Modifier.padding(4.dp)
                     )
                 } else if (content is ChatperImage) {
                     SubcomposeAsyncImage(

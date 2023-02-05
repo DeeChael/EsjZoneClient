@@ -1,7 +1,6 @@
 package net.deechael.esjzone.page
 
 import android.content.Context
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,10 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import net.deechael.esjzone.MainActivity
+import net.deechael.esjzone.EsjZoneActivity
 import net.deechael.esjzone.item.Novel
 import net.deechael.esjzone.thread
-import net.deechael.esjzone.ui.theme.ESJZoneTheme
 
 @Preview
 @Composable
@@ -58,23 +55,15 @@ fun Favorites(context: Context?, pages: Int, currentPage: Int, novels: List<Nove
             for (novel in novels) {
                 Card(
                     onClick = {
-                        (context as MainActivity).setContent {
-                            ESJZoneTheme {
-                                Surface(modifier = Modifier.fillMaxSize()) {
-                                    Loading()
-                                }
-                            }
-                        }
+                        (context as EsjZoneActivity).updateContent({
+                            Loading()
+                        })
                         GlobalScope.launch {
                             thread {
                                 val detailedNovel = context.esjzone.getNovelDetail(novel)
-                                context.setContent {
-                                    ESJZoneTheme {
-                                        Surface(modifier = Modifier.fillMaxSize()) {
-                                            NovelDetail(context, detailedNovel)
-                                        }
-                                    }
-                                }
+                                context.updateContent({
+                                    NovelDetail(context, detailedNovel)
+                                })
                             }
                         }
                     },
@@ -104,29 +93,21 @@ fun Favorites(context: Context?, pages: Int, currentPage: Int, novels: List<Nove
                     onClick = {
                         if (currentPage <= 1)
                             return@Button
-                        (context as MainActivity).setContent {
-                            ESJZoneTheme {
-                                Surface(modifier = Modifier.fillMaxSize()) {
-                                    Loading()
-                                }
-                            }
-                        }
+                        (context as EsjZoneActivity).updateContent({
+                            Loading()
+                        })
                         GlobalScope.launch {
                             thread {
                                 val nextNovels =
                                     context.esjzone.getFavorite(currentPage - 1)
-                                context.setContent {
-                                    ESJZoneTheme {
-                                        Surface(modifier = Modifier.fillMaxSize()) {
-                                            Favorites(
-                                                context,
-                                                pages = pages,
-                                                currentPage = currentPage - 1,
-                                                novels = nextNovels
-                                            )
-                                        }
-                                    }
-                                }
+                                context.updateContent({
+                                    Favorites(
+                                        context,
+                                        pages = pages,
+                                        currentPage = currentPage - 1,
+                                        novels = nextNovels
+                                    )
+                                })
                             }
                         }
                     },
@@ -145,29 +126,21 @@ fun Favorites(context: Context?, pages: Int, currentPage: Int, novels: List<Nove
                     onClick = {
                         if (currentPage >= pages)
                             return@Button
-                        (context as MainActivity).setContent {
-                            ESJZoneTheme {
-                                Surface(modifier = Modifier.fillMaxSize()) {
-                                    Loading()
-                                }
-                            }
-                        }
+                        (context as EsjZoneActivity).updateContent({
+                            Loading()
+                        })
                         GlobalScope.launch {
                             thread {
                                 val nextNovels =
                                     context.esjzone.getFavorite(currentPage + 1)
-                                context.setContent {
-                                    ESJZoneTheme {
-                                        Surface(modifier = Modifier.fillMaxSize()) {
-                                            Favorites(
-                                                context,
-                                                pages = pages,
-                                                currentPage = currentPage + 1,
-                                                novels = nextNovels
-                                            )
-                                        }
-                                    }
-                                }
+                                context.updateContent({
+                                    Favorites(
+                                        context,
+                                        pages = pages,
+                                        currentPage = currentPage + 1,
+                                        novels = nextNovels
+                                    )
+                                })
                             }
                         }
                     },

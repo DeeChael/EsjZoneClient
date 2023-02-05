@@ -2,7 +2,6 @@ package net.deechael.esjzone.page
 
 import android.content.Context
 import android.widget.Toast
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,7 +17,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -37,8 +35,7 @@ import androidx.compose.ui.unit.em
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import net.deechael.esjzone.MainActivity
-import net.deechael.esjzone.ui.theme.ESJZoneTheme
+import net.deechael.esjzone.EsjZoneActivity
 
 
 @Preview
@@ -108,24 +105,16 @@ fun Login(context: Context?) {
             buttonEnabled = false
             GlobalScope.launch {
                 Toast.makeText(context, "登录中", Toast.LENGTH_SHORT).show()
-                (context as MainActivity).setContent {
-                    ESJZoneTheme {
-                        Surface(modifier = Modifier.fillMaxSize()) {
-                            Loading()
-                        }
-                    }
-                }
+                (context as EsjZoneActivity).updateContent({
+                    Loading()
+                })
                 if (context.esjzone.login(email, password)) {
                     context.username = context.esjzone.getUsername()
                     // context.avatar = context.esjzone.getAvatar()
                     val categories = context.esjzone.getCategories()
-                    context.setContent {
-                        ESJZoneTheme {
-                            Surface(modifier = Modifier.fillMaxSize()) {
-                                MainPage(context = context, categories)
-                            }
-                        }
-                    }
+                    context.updateContent({
+                        MainPage(context = context, categories)
+                    })
                     Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, "登录失败", Toast.LENGTH_SHORT).show()

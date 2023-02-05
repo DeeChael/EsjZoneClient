@@ -1,7 +1,7 @@
 package net.deechael.esjzone.network
 
 import android.content.Context
-import net.deechael.esjzone.MainActivity
+import net.deechael.esjzone.EsjZoneActivity
 import net.deechael.esjzone.config.CacheConfig
 import net.deechael.esjzone.item.Category
 import net.deechael.esjzone.item.Chapter
@@ -84,7 +84,7 @@ class EsjZoneNetwork(context: Context?, proxy: Proxy? = null) {
         val cache = CacheConfig()
         cache.wsKey = wsKey
         cache.wsToken = wsToken
-        (context as MainActivity).config.saveCache(cache)
+        (context as EsjZoneActivity).config.saveCache(cache)
     }
 
     fun getMainPage(): ResponseBody {
