@@ -18,8 +18,8 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import net.deechael.esjzone.item.DetailedChapter
 import net.deechael.esjzone.item.content.ChapterText
-import net.deechael.esjzone.item.content.ChatperBreakLine
-import net.deechael.esjzone.item.content.ChatperImage
+import net.deechael.esjzone.item.content.ChapterBreakLine
+import net.deechael.esjzone.item.content.ChapterImage
 
 @Preview
 @Composable
@@ -30,10 +30,10 @@ fun ChapterPreview() {
             chapterContents = listOf(
                 ChapterText("这是第一段"),
                 ChapterText("这是第二段"),
-                ChatperBreakLine(),
+                ChapterBreakLine(),
                 ChapterText("这是第三段"),
                 ChapterText("这是第四段"),
-                ChatperImage("https://img.kookapp.cn/assets/2023-01/rhv1ugUjQw0dd0ef.png"),
+                ChapterImage("https://img.kookapp.cn/assets/2023-01/rhv1ugUjQw0dd0ef.png"),
                 ChapterText("这是第五段按时到海南岛啊后的念诵偶的号i是你都i的那艘i年第哦啊三农i阿森纳都i送i那点滴哦三栋爱上你的拿爱死你都i三年底哦那四年第三地哦那电脑i你都i阿森纳的内塞哦你定阿松i你都i阿斯年底难Dion扫i你都爱上你都i阿森纳i哦那嗲是农地那艘i的那四年的"),
                 ChapterText("这是第五段按时到海南岛啊后的念诵偶的号i是你都i的那艘i年第哦啊三农i阿森纳都i送i那点滴哦三栋爱上你的拿爱死你都i三年底哦那四年第三地哦那电脑i你都i阿森纳的内塞哦你定阿松i你都i阿斯年底难Dion扫i你都爱上你都i阿森纳i哦那嗲是农地那艘i的那四年的"),
                 ChapterText("这是第五段按时到海南岛啊后的念诵偶的号i是你都i的那艘i年第哦啊三农i阿森纳都i送i那点滴哦三栋爱上你的拿爱死你都i三年底哦那四年第三地哦那电脑i你都i阿森纳的内塞哦你定阿松i你都i阿斯年底难Dion扫i你都爱上你都i阿森纳i哦那嗲是农地那艘i的那四年的"),
@@ -74,7 +74,7 @@ fun Chapter(detailedChapter: DetailedChapter) {
                         text = content.content,
                         modifier = Modifier.padding(4.dp)
                     )
-                } else if (content is ChatperImage) {
+                } else if (content is ChapterImage) {
                     SubcomposeAsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(content.url)
@@ -86,7 +86,7 @@ fun Chapter(detailedChapter: DetailedChapter) {
                         contentDescription = null,
                         modifier = Modifier.padding(2.dp)
                     )
-                } else if (content is ChatperBreakLine) {
+                } else if (content is ChapterBreakLine) {
                     Text(
                         text = "",
                         modifier = Modifier.padding(2.dp)

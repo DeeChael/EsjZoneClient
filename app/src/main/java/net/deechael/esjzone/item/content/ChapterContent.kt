@@ -16,7 +16,7 @@ class ChapterText(content: String) : ChapterContent {
 
 }
 
-class ChatperBreakLine : ChapterContent {
+class ChapterBreakLine : ChapterContent {
 
     override fun toString(): String {
         return "\n"
@@ -24,7 +24,7 @@ class ChatperBreakLine : ChapterContent {
 
 }
 
-class ChatperImage(url: String) : ChapterContent {
+class ChapterImage(url: String) : ChapterContent {
 
     val url: String
 

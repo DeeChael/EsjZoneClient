@@ -10,8 +10,8 @@ import net.deechael.esjzone.item.DetailedNovel
 import net.deechael.esjzone.item.Novel
 import net.deechael.esjzone.item.content.ChapterContent
 import net.deechael.esjzone.item.content.ChapterText
-import net.deechael.esjzone.item.content.ChatperBreakLine
-import net.deechael.esjzone.item.content.ChatperImage
+import net.deechael.esjzone.item.content.ChapterBreakLine
+import net.deechael.esjzone.item.content.ChapterImage
 import okhttp3.Callback
 import okhttp3.Cookie
 import okhttp3.CookieJar
@@ -279,9 +279,9 @@ class EsjZoneNetwork(context: Context?, proxy: Proxy? = null) {
         for (rawContent in Xsoup.compile(CHAPTER_CONTENT)
             .evaluate(document).elements[0].allElements) {
             if (rawContent.getElementsByTag("br").size > 0) {
-                chapterContents.add(ChatperBreakLine())
+                chapterContents.add(ChapterBreakLine())
             } else if (rawContent.getElementsByTag("img").size > 0) {
-                chapterContents.add(ChatperImage(rawContent.getElementsByTag("img")[0].attr("src")))
+                chapterContents.add(ChapterImage(rawContent.getElementsByTag("img")[0].attr("src")))
             } else {
                 chapterContents.add(ChapterText(rawContent.text()))
             }
