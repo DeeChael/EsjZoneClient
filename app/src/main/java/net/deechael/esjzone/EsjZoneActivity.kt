@@ -28,6 +28,8 @@ import net.deechael.esjzone.page.Loading
 import net.deechael.esjzone.page.Login
 import net.deechael.esjzone.page.MainPage
 import net.deechael.esjzone.page.NetworkInNeed
+import net.deechael.esjzone.themes.LatteTheme
+import net.deechael.esjzone.themes.MochaTheme
 import net.deechael.esjzone.ui.theme.ESJZoneTheme
 
 

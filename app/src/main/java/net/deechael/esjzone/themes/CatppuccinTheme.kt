@@ -1,4 +1,4 @@
-package net.deechael.esjzone
+package net.deechael.esjzone.themes
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

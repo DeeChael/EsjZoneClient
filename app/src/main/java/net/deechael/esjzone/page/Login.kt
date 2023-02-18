@@ -92,7 +92,6 @@ fun Login(context: Context?) {
                     Icons.Filled.Visibility
                 else Icons.Filled.VisibilityOff
 
-                // Please provide localized description for accessibility services
                 val description = if (passwordVisible) "隐藏密码" else "显示密码"
 
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
