@@ -37,18 +37,21 @@ import net.deechael.esjzone.thread
 @Preview
 @Composable
 fun NovelDetailPreview() {
-    NovelDetail(context = null, novel = DetailedNovel(name = "测试",
-        cover = "https://melonbooks.akamaized.net/user_data/packages/resize_image.php?image=211000157282.jpg&width=600",
-        url = "",
-        chapters = listOf(
-            Chapter("测试1", ""),
-            Chapter("测试2", ""),
-            Chapter("测试3", ""),
-            Chapter("测试4", ""),
-            Chapter("测试5", ""),
-            Chapter("测试6", "")
+    NovelDetail(
+        context = null, novel = DetailedNovel(
+            name = "测试",
+            cover = "https://melonbooks.akamaized.net/user_data/packages/resize_image.php?image=211000157282.jpg&width=600",
+            url = "",
+            chapters = listOf(
+                Chapter("测试1", ""),
+                Chapter("测试2", ""),
+                Chapter("测试3", ""),
+                Chapter("测试4", ""),
+                Chapter("测试5", ""),
+                Chapter("测试6", "")
+            )
         )
-    ))
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -135,7 +138,8 @@ fun NovelDetail(context: Context?, novel: DetailedNovel, back: () -> Unit = {}) 
                     Text(
                         text = novel.name,
                         fontSize = 8.em,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier
+                            .padding(16.dp)
                             .align(Alignment.TopCenter)
                     )
                 }

@@ -6,8 +6,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -23,7 +27,6 @@ import androidx.compose.ui.platform.NoInspectorInfo
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.deechael.esjzone.EsjZoneActivity
@@ -162,10 +165,14 @@ fun NavBar(
             }
         }, label = {
             Text(
-                text = "主页",
-                modifier = Modifier.padding(18.dp)
+                text = "主页"
             )
-        }, icon = {})
+        }, icon = {
+            Icon(
+                imageVector = Icons.Filled.Home,
+                contentDescription = "主页"
+            )
+        })
         NavigationBarItem(selected = (selectedIndex == 1), onClick = {
             GlobalScope.launch {
                 thread {
@@ -174,10 +181,14 @@ fun NavBar(
             }
         }, label = {
             Text(
-                text = "个人",
-                modifier = Modifier.padding(18.dp)
+                text = "个人"
             )
-        }, icon = {})
+        }, icon = {
+            Icon(
+                imageVector = Icons.Filled.AccountCircle,
+                contentDescription = "个人"
+            )
+        })
         NavigationBarItem(selected = (selectedIndex == 2), onClick = {
             GlobalScope.launch {
                 thread {
@@ -186,10 +197,14 @@ fun NavBar(
             }
         }, label = {
             Text(
-                text = "设置",
-                modifier = Modifier.padding(18.dp)
+                text = "设置"
             )
-        }, icon = {})
+        }, icon = {
+            Icon(
+                imageVector = Icons.Filled.Settings,
+                contentDescription = "设置"
+            )
+        })
     }
 }
 

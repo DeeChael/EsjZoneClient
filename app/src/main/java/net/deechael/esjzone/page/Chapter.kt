@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.em
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import net.deechael.esjzone.item.DetailedChapter
-import net.deechael.esjzone.item.content.ChapterText
 import net.deechael.esjzone.item.content.ChapterBreakLine
 import net.deechael.esjzone.item.content.ChapterImage
+import net.deechael.esjzone.item.content.ChapterText
 
 @Preview
 @Composable

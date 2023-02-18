@@ -8,10 +8,10 @@ import net.deechael.esjzone.item.Chapter
 import net.deechael.esjzone.item.DetailedChapter
 import net.deechael.esjzone.item.DetailedNovel
 import net.deechael.esjzone.item.Novel
-import net.deechael.esjzone.item.content.ChapterContent
-import net.deechael.esjzone.item.content.ChapterText
 import net.deechael.esjzone.item.content.ChapterBreakLine
+import net.deechael.esjzone.item.content.ChapterContent
 import net.deechael.esjzone.item.content.ChapterImage
+import net.deechael.esjzone.item.content.ChapterText
 import okhttp3.Callback
 import okhttp3.Cookie
 import okhttp3.CookieJar
