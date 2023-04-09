@@ -50,7 +50,7 @@ fun CategoriesPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Categories(context: Context?, categories: List<Category>) {
+fun Categories(context: Context?, categories: List<Category>, back: @Composable (context: Context) -> Unit = {}) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -78,7 +78,8 @@ fun Categories(context: Context?, categories: List<Category>) {
                                     Novels(
                                         context = context,
                                         categoryName = category.name,
-                                        novels = novels
+                                        novels = novels,
+                                        back = back
                                     )
                                 })
                             }

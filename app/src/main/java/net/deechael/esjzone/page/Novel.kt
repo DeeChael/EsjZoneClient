@@ -56,7 +56,7 @@ fun NovelDetailPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Novels(context: Context?, categoryName: String, novels: List<Novel>, back: () -> Unit = {}) {
+fun Novels(context: Context?, categoryName: String, novels: List<Novel>, back: @Composable (context: Context) -> Unit = {}) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -109,7 +109,13 @@ fun Novels(context: Context?, categoryName: String, novels: List<Novel>, back: (
             }
         }
     }
-    BackHandler(enabled = true, back)
+    BackHandler(
+        onBack = {
+            (context as EsjZoneActivity).updateContent({
+                back(context)
+            })
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

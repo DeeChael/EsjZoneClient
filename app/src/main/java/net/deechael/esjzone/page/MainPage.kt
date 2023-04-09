@@ -2,6 +2,7 @@ package net.deechael.esjzone.page
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -68,7 +69,7 @@ fun MainPagePreview() {
 }
 
 @Composable
-fun MainPage(context: Context?, categories: List<Category>) {
+fun MainPage(context: Context?, categories: List<Category>, back: @Composable (context: Context) -> Unit = {}) {
     Container(
         userTrigger = {
             (context as EsjZoneActivity).updateContent({
@@ -91,10 +92,17 @@ fun MainPage(context: Context?, categories: List<Category>) {
     ) {
         Categories(context, categories)
     }
+    BackHandler(
+        onBack = {
+            (context as EsjZoneActivity).updateContent({
+                back(context)
+            })
+        }
+    )
 }
 
 @Composable
-fun UserPage(context: Context) {
+fun UserPage(context: Context, back: @Composable (context: Context) -> Unit = {}) {
     Container(
         mainPageTrigger = {
             (context as EsjZoneActivity).updateContent({
@@ -119,10 +127,17 @@ fun UserPage(context: Context) {
         val network = (context as EsjZoneActivity).esjzone
         User(context = context, username = context.username)
     }
+    BackHandler(
+        onBack = {
+            (context as EsjZoneActivity).updateContent({
+                back(context)
+            })
+        }
+    )
 }
 
 @Composable
-fun SettingsPage(context: Context) {
+fun SettingsPage(context: Context, back: @Composable (context: Context) -> Unit = {}) {
     Container(
         mainPageTrigger = {
             (context as EsjZoneActivity).updateContent({
@@ -147,6 +162,13 @@ fun SettingsPage(context: Context) {
         val network = (context as EsjZoneActivity).esjzone
         Settings(context = context)
     }
+    BackHandler(
+        onBack = {
+            (context as EsjZoneActivity).updateContent({
+                back(context)
+            })
+        }
+    )
 }
 
 @Composable
