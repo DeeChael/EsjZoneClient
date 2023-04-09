@@ -6,7 +6,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
-import android.os.Looper
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,54 +15,53 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Runnable
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.deechael.esjzone.client.EsjzoneClient
+import net.deechael.esjzone.client.EsjzoneClientBuilder
+import net.deechael.esjzone.client.category.Category
+import net.deechael.esjzone.client.chapter.Chapter
+import net.deechael.esjzone.client.novel.Novel
+import net.deechael.esjzone.compose.Start
+import net.deechael.esjzone.compose.general.Loading
+import net.deechael.esjzone.compose.general.NetworkInNeed
 import net.deechael.esjzone.database.Settings
-import net.deechael.esjzone.network.EsjZoneNetwork
-import net.deechael.esjzone.page.Loading
-import net.deechael.esjzone.page.Login
-import net.deechael.esjzone.page.MainPage
-import net.deechael.esjzone.page.NetworkInNeed
 import net.deechael.esjzone.themes.LatteTheme
 import net.deechael.esjzone.themes.MochaTheme
 import net.deechael.esjzone.ui.theme.ESJZoneTheme
-
 
 class EsjZoneActivity : ComponentActivity() {
 
     lateinit var config: Settings
         private set
 
-    lateinit var esjzone: EsjZoneNetwork
-        private set
-
-    lateinit var username: String
-
-    lateinit var avatar: String
+    lateinit var esjzone: EsjzoneClient
 
     private var defaultTheme: @Composable (Boolean, Boolean, ctx: @Composable () -> Unit) -> Unit =
         { a, b, c ->
             ESJZoneTheme(a, b, c)
         }
 
+    object viewing {
+
+        lateinit var category: Category
+        lateinit var novel: Novel
+        lateinit var chapter: Chapter
+
+    }
+
     var previousContent: @Composable () -> Unit = {
         Loading()
     }
         private set
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         config = Settings(this)
-        esjzone = EsjZoneNetwork(this)
 
-        val general = config.getGeneral()
-        this.updateTheme(general.theme)
+        this.updateTheme(2)
         if (!checkNetwork()) {
             connectedBefore = false
             Toast.makeText(this, "无法连接至互联网", Toast.LENGTH_SHORT).show()
@@ -75,26 +73,14 @@ class EsjZoneActivity : ComponentActivity() {
                 Loading()
             })
             val cache = config.getCache()
-            esjzone.updateCookie(cache.wsKey, cache.wsToken)
-            GlobalScope.launch {
-                Looper.prepare()
-                toast("正在获取信息")
-                thread {
-                    if (esjzone.checkLoggedIn()) {
-                        this@EsjZoneActivity.username = esjzone.getUsername()
-                        // this@MainActivity.avatar = esjzone.getAvatar()
-                        val categories = this@EsjZoneActivity.esjzone.getCategories()
-                        updateContent({
-                            MainPage(context = this@EsjZoneActivity, categories)
-                        })
-                    } else {
-                        toast("您没有登录")
-                        updateContent({
-                            Login(this@EsjZoneActivity)
-                        })
-                    }
-                }
-            }
+
+            esjzone = EsjzoneClientBuilder.of()
+                .key(cache.wsKey)
+                .token(cache.wsToken)
+                .build()
+            updateContent({
+                Start(context = this)
+            })
         }
     }
 
@@ -139,12 +125,9 @@ class EsjZoneActivity : ComponentActivity() {
                 }
             }
         }
-        val general = this.config.getGeneral()
-        general.theme = index
-        this.config.saveGeneral(general)
     }
 
-    private fun toast(text: String) {
+    fun toast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 

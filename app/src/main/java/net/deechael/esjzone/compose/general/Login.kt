@@ -1,4 +1,4 @@
-package net.deechael.esjzone.page
+package net.deechael.esjzone.compose.general
 
 import android.content.Context
 import android.widget.Toast
@@ -32,10 +32,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import androidx.compose.ui.window.Popup
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import net.deechael.esjzone.EsjZoneActivity
+import net.deechael.esjzone.client.EsjzoneLoginer
 
 
 @Preview
@@ -46,11 +49,16 @@ fun LoginPreview() {
 
 @OptIn(DelicateCoroutinesApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun Login(context: Context?) {
+fun Login(context: Context?, onSuccess: () -> Unit = {}) {
+    context as EsjZoneActivity
+
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     var buttonEnabled by rememberSaveable { mutableStateOf(true) }
+
+    var tryLogging by rememberSaveable { mutableStateOf(false) }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -102,21 +110,20 @@ fun Login(context: Context?) {
         Spacer(modifier = Modifier.height(50.dp))
         Button(onClick = {
             buttonEnabled = false
+            tryLogging = true
+            Toast.makeText(context, "登录中", Toast.LENGTH_SHORT).show()
             GlobalScope.launch {
-                Toast.makeText(context, "登录中", Toast.LENGTH_SHORT).show()
-                (context as EsjZoneActivity).updateContent({
-                    Loading()
-                })
-                if (context.esjzone.login(email, password)) {
-                    context.username = context.esjzone.getUsername()
-                    // context.avatar = context.esjzone.getAvatar()
-                    val categories = context.esjzone.getCategories()
-                    context.updateContent({
-                        MainPage(context = context, categories)
-                    })
-                    Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show()
+                context.esjzone = EsjzoneLoginer.of().login(email, password)
+                if (context.esjzone.isLoggedIn()) {
+                    MainScope().launch {
+                        onSuccess()
+                        Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(context, "登录失败", Toast.LENGTH_SHORT).show()
+                    MainScope().launch {
+                        Toast.makeText(context, "登录失败", Toast.LENGTH_SHORT).show()
+                    }
+                    tryLogging = false
                     buttonEnabled = true
                 }
             }
@@ -127,5 +134,11 @@ fun Login(context: Context?) {
         ) {
             Text("登录")
         }
+        if (tryLogging) {
+            Popup {
+                Indicator()
+            }
+        }
     }
+
 }

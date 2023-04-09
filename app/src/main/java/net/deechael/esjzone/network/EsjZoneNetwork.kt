@@ -54,6 +54,8 @@ class EsjZoneNetwork(context: Context?, proxy: Proxy? = null) {
 
     private var httpClient: OkHttpClient
 
+    private var checkedLoggedIn: Boolean = false
+
     init {
         this.context = context
         this.proxy = proxy
@@ -120,12 +122,15 @@ class EsjZoneNetwork(context: Context?, proxy: Proxy? = null) {
     }
 
     fun checkLoggedIn(): Boolean {
+        if (this.checkedLoggedIn)
+            return true
         return try {
             val request = builder()
                 .url("https://www.esjzone.cc/my/profile")
                 .get()
             val document = Jsoup.parse(body(request.build()).string())
-            Xsoup.compile(USERNAME_XPATH).evaluate(document).list().size > 0
+            this.checkedLoggedIn = Xsoup.compile(USERNAME_XPATH).evaluate(document).list().size > 0
+            this.checkedLoggedIn
         } catch (e: Exception) {
             e.printStackTrace()
             false

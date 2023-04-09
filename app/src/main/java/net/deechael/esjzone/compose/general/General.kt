@@ -1,4 +1,4 @@
-package net.deechael.esjzone.page
+package net.deechael.esjzone.compose.general
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.VectorConverter
