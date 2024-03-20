@@ -1,4 +1,6 @@
 # Esj Zone Client
+# 已重新开发整个结构，请检查：https://github.com/DeeChael/Esjzone
+
 非官方的Esj Zone安卓客户端
 
 **注意：目前该软件仍在开发中，所以极其的不稳定，准确来说都无法正常使用**
